@@ -52,6 +52,7 @@ function HomeProvider({ children }) {
             "homeTestimonialsHeading",
             "homeTestimonialsClientLogos",
             "homeTestimonialsTestimonials",
+            "homeFeaturedProjectsParagraph"
           ],
           homeObject
         );

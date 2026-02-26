@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { contact } from '../../assets/simulateCMS' // Replace with redux
 import { navbar } from '../../assets/simulateCMS' // Replace with redux
-import { logo } from '../../assets/simulateCMS'
+import { logo } from '../../assets/simulateCMS' // Replace with redux
 
 function Header() {
   const [mobileNav, setMobileNav] = useState(false)

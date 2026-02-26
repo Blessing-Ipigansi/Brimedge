@@ -302,16 +302,16 @@ export const aboutHero = {
   mainText: "We are a full-service construction and interior solutions company, we create spaces."
 }
 export const aboutClientLogos = [
-  "/ActionAgainstHunger.png",
   "/mercyCorps.png",
-  "/CBM.png",
-  "/CreativeAssociates.png",
-  "/MalariaConsortium.png",
-  "/NIF.png",
-  "/PLANlogo.png",
-  "/RedCrossInternational.png",
-  "/SelfHelpAfrica.png",
-  "/PIC.png",
+  "/brimedgeLogoDarkHalf.png",
+  "/mercyCorps.png",
+  "/brimedgeLogoDarkHalf.png",
+  "/mercyCorps.png",
+  "/brimedgeLogoDarkHalf.png",
+  "/mercyCorps.png",
+  "/brimedgeLogoDarkHalf.png",
+  "/mercyCorps.png",
+  "/brimedgeLogoDarkHalf.png",
 ];
 export const aboutUs = {
   breif: 'Brimedge is a full-service property solutions firm known for its refined craftsmanship, top-tier quality, and exceptional service. We take pride in delivering innovative solutions that seamlessly blend aesthetics with functionality — whether in design, construction, renovation, furnishing, or long-term maintenance.',

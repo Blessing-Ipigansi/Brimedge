@@ -46,7 +46,7 @@ function Hero() {
           <h1 style={{animationDelay: '0.2s', textShadow: '-2px 1.5px 0px rgb(80,80,80)'}} className="font-oswald font-bold mb-16 tracking-[0.5px] text-[48px] md:text-[50px] lg:text-[60px] leading-[56px] md:leading-[56px] lg:leading-[70px] animate-fade-in">
             { homeHeroHeading1 }</h1>
           <div className="text-center lg:text-left mb-8">
-            <p className="text-lg text-white/70 leading-relaxed max-w-md animate-fade-in">
+            <p className="text-lg text-white/90 leading-relaxed max-w-md animate-fade-in">
               { homeHeroP1 }</p>
           </div> 
           <div style={{animationDelay: '0.6s'}} className="flex flex-col sm:flex-row gap-4 animate-fade-in mb-8">
@@ -81,7 +81,7 @@ function Hero() {
                 </svg>
                 <div className="text-3xl font-bold">{ homeHeroProjectsCompleted+'+' }</div>
               </div>
-              <div className="text-white/80">Projects Completed</div>
+              <div className="text-white">Projects Completed</div>
             </div> 
             <div className="rounded-2xl p-6  text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
@@ -155,11 +155,11 @@ function Hero() {
                 </svg>
                 <div className="text-3xl font-bold">{ homeHeroYearsOfExperience+'+' }</div>
               </div>
-              <div className="text-white/80">Years in the Industry</div>
+              <div className="text-white">Years in the Industry</div>
             </div> 
           </div>
           <div className="text-center lg:text-left">
-            <p className="text-lg text-white/70 leading-relaxed max-w-md">
+            <p className="text-lg text-white leading-relaxed max-w-md">
               { homeHeroP2 }</p>
           </div> 
         </div>
