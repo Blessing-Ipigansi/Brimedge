@@ -10,6 +10,7 @@ import ErrorPage from './pages/ErrorPage.jsx'
 import { HelmetProvider } from 'react-helmet-async'
 import HomeProvider from './context/provider/HomeProvider.jsx'
 import ProjectsProvider from "./context/provider/ProjectsProvider.jsx"
+import GlobalProvider from "./context/provider/GlobalProvider.jsx"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 // Delete
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
 
 function App() {
   return <>
+  <GlobalProvider>
   <ProjectsProvider>
   <HomeProvider>
     <HelmetProvider>
@@ -42,6 +44,7 @@ function App() {
     </HelmetProvider>
   </HomeProvider>
   </ProjectsProvider>
+  </GlobalProvider>
 </>
 }
 export default App

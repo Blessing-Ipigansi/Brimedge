@@ -1,12 +1,66 @@
 import { Link } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link'
-import { useState, useEffect, useRef } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { contact } from '../../assets/simulateCMS' // Replace with redux
-import { navbar } from '../../assets/simulateCMS' // Replace with redux
-import { logo } from '../../assets/simulateCMS' // Replace with redux
+// import { contact } from '../../assets/simulateCMS' // Replace with redux
+// import { navbar } from '../../assets/simulateCMS' // Replace with redux
+// import { logo } from '../../assets/simulateCMS' // Replace with redux
+import GlobalContext from '../../context/GlobalContext.jsx'
 
 function Header() {
+  const { getFields } = useContext(GlobalContext);
+  const [content, setContent] = useState({ isLoading: true });
+  const { logo, contact, navbar } = 
+  (content.logo && content.contact && content.navbar)
+  ?
+  {
+    "logo": {
+      dark: content.logo[0],
+      darkHalf: content.logo[1],
+      light: content.logo[2],
+      lightHalf: content.logo[3]
+    },
+    "contact": content.contact,
+    "navbar": content.navbar
+  }
+  :
+  {
+    "logo": {
+      brimedgeLogoDark: "",
+      brimedgeLogoDarkHalf: "",
+      brimedgeLogoLight: "",
+      brimedgeLogoLightHalf: ""
+    },
+    "contact": {
+      "email": [
+        "@email.com",
+        "@email.com"
+      ],
+      "phone": [
+          "+",
+          "+"
+      ],
+      "location": "",
+      "workingHours": [
+          "AM - PM",
+          "AM - PM",
+          "AM - PM"
+      ],
+      "socialMediaHandles": {
+          "x": "https://x.com/",
+          "youtube": "https://www.youtube.com",
+          "facebook": "https://web.facebook.com/",
+          "linkedIn": "https://www.linkedin.com/",
+          "instagram": "https://instagram.com/"
+      }
+    },
+    "navbar": {
+      "p1": "",
+      "p2": "",
+      "p3": ""
+    }
+  }
+
   const [mobileNav, setMobileNav] = useState(false)
   
   const page = useLocation().pathname
@@ -17,6 +71,14 @@ function Header() {
     const observer = new IntersectionObserver(([entry]) => setAtTopOfPage(entry.isIntersecting), { root: null })
     if (styleTriggerRef.current) observer.observe(styleTriggerRef.current)
 
+    getFields(
+      "logo",
+      "contact",
+      "navbar"
+    ).then((data) => {
+      setContent(data);
+    })
+    
     return () => {
       observer.disconnect()
     }

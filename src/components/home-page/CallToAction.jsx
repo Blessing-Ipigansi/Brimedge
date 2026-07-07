@@ -1,7 +1,19 @@
 import { HashLink } from 'react-router-hash-link'
-import { homeCallToAction } from '../../assets/simulateCMS'
+// import { homeCallToAction } from '../../assets/simulateCMS'
+import { useContext, useState, useEffect} from "react"
+import GlobalContext from "../../context/GlobalContext.jsx"
 
 function CallToAction() {
+  const { getFields } = useContext(GlobalContext);
+  const [content, setContent] = useState({ isLoading: true });
+  const homeCallToAction = content.callToAction
+
+  useEffect(() => {
+    getFields("callToAction").then((data) => {
+      setContent(data);
+    });
+  }, [])
+
   return <div className='relative bg-gray-900 overflow-hidden'>
     <div className='absolute inset-0 bg-dark-blue z-[1]'></div>
     <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(34,197,94,0.05),transparent_70%)]'></div>
@@ -9,19 +21,19 @@ function CallToAction() {
     <div className='grid lg:grid-cols-3 items-center max-w-[1600px] px-4 lg:px-14 py-14 mx-auto gap-6 relative z-[2]'>
       <div className='shadow rounded-lg lg:col-span-2'>
         <h3 className='text-gray-100 text-3xl md:text-4xl lg:text-[42px] mb-6 font-oswald tracking-[2px] text-center lg:text-left'>
-          { homeCallToAction.heading }</h3>
+          { homeCallToAction?.heading }</h3>
         <p className='text-gray-100 text-lg lg:max-w-3xl mb-4 text-center lg:text-left'>
-          { homeCallToAction.p1 }
+          { homeCallToAction?.p1 }
         </p>
         <p className="text-gray-100 text-lg lg:max-w-3xl text-center lg:text-left">
-          { homeCallToAction.p2 }
+          { homeCallToAction?.p2 }
         </p>
       </div>
       <div className="flex justify-center space-x-6 ml-15">
         <HashLink to='/contact#page-top' className='whitespace-nowrap bg-white/10 px-5 flex items-center py-3 rounded-xl text-gray-100 text-lg hover:bg-white/20'>
-          { homeCallToAction.btn1Text }</HashLink>
+          { homeCallToAction?.btn1Text }</HashLink>
         <HashLink to='/projects#projects-page' className='whitespace-nowrap bg-edge-green/20 px-5 flex items-center py-3 rounded-xl text-gray-100 text-lg hover:bg-edge-green/30'>
-          { homeCallToAction.btn2Text }</HashLink>
+          { homeCallToAction?.btn2Text }</HashLink>
       </div>
     </div>
     <div className="px-[56px] absolute bottom-0 h-[1px] w-full z-[2]">

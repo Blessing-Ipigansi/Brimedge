@@ -77,11 +77,9 @@ function GlobalProvider({ children }) {
     }
   };
 
-  return (
-    <GlobalContext.Provider value={{ getFields }}>
-      {children}
-    </GlobalContext.Provider>
-  );
+  return <GlobalContext.Provider value={{ getFields }}>
+    { children }
+  </GlobalContext.Provider>
 }
 
 export default GlobalProvider;
