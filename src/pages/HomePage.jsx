@@ -4,12 +4,27 @@ import OurProcess from '../components/home-page/OurProcess.jsx'
 import FeaturedProjects from '../components/home-page/FeaturedProjects.jsx'
 import ClientTestimonials from '../components/home-page/ClientTestimonials.jsx'
 import CallToAction from '../components/home-page/CallToAction.jsx'
-import { useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { metaData } from '../assets/simulateCMS.js' // Replace with CMS
+// import { metaData } from '../assets/simulateCMS.js' // Replace with CMS
+import GlobalContext from "../context/GlobalContext.jsx"
 
 
 function HomePage() {
+  const { getFields } = useContext(GlobalContext)
+  const [ content, setContent ] = useState({
+    metaData: {
+      home: {
+        title: "",
+        description: "",
+        ogTitle: "",
+        ogDescription: "",
+        ogImage: ""
+      }
+    }
+  })
+  const { metaData } = content
+
   const screenSize = () => {
     let w = window.innerWidth // 768 1024 
 
@@ -32,8 +47,10 @@ function HomePage() {
   }
 
   useEffect(() => {
-    window.addEventListener('resize', trackWindowSize)
+    getFields('metaData')
+    .then( data => { setContent(data) } )
 
+    window.addEventListener('resize', trackWindowSize)
     return () => {
       window.removeEventListener('resize', trackWindowSize)
     }
@@ -44,6 +61,13 @@ function HomePage() {
   const baseUrl = rawBaseUrl.replace(/\/+$/, "")
   const fullPath = baseUrl + window.location.pathname
 
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return (
     <>
       {/* metadata */}

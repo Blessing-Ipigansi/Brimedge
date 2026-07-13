@@ -1,7 +1,15 @@
-import { contactPage } from "../../assets/simulateCMS.js" // Replace with CMS
-import { useState } from "react"
+// import { contactPage } from "../../assets/simulateCMS.js" // Replace with CMS
+import { useContext, useState, useEffect } from 'react'
+import ContactContext from "../../context/ContactContext.jsx"
 
 function MessageUs() {
+  const { getFields } = useContext(ContactContext)
+  const [ content, setContent ] = useState({
+    contactPageMessageHeader1: "",
+    contactPageMessageParagraph: "",
+    contactPageSubmitBtnCaption: ""
+  })
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,6 +24,18 @@ function MessageUs() {
     })
   }
 
+  useEffect(() => {
+    getFields('contactPageMessageHeader1', 'contactPageMessageParagraph', 'contactPageSubmitBtnCaption')
+    .then( data => { setContent(data) } )
+  }, [])
+
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return <section className="h-full border-x-[1px] border-gray-100 bg-gradient-to-br from-white to-gray-50">
     <div className="p-8 pt-6">
       {/* Send Us a Message */}
@@ -25,9 +45,9 @@ function MessageUs() {
         </div>
         <div className="text-center">
           <h2 className="text-brim-blue font-bold text-[29px] leading-[48px]">
-            {contactPage.messageHeader1}</h2>
+            {content.contactPageMessageHeader1}</h2>
           <p className="text-gray-600">
-            {contactPage.messageParagraph}</p>
+            {content.contactPageMessageParagraph}</p>
         </div>
       </div>
       {/* Form */}
@@ -66,7 +86,7 @@ function MessageUs() {
           type="submit"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send h-[18px] w-[18px] mr-[10px]"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path><path d="m21.854 2.147-10.94 10.939"></path></svg>
-          <span>{contactPage.submitBtnCaption}</span>
+          <span>{content.contactPageSubmitBtnCaption}</span>
         </button>
       </form>
     </div>

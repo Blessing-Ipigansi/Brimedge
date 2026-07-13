@@ -27,8 +27,8 @@ function FeaturedProjects({ screenSize }) {
       setContent(data)
     } )
     
-    projectsRequest("fields.isFeatured:true", 20, 0).then( data => {
-      const partitioned = Array.from({length: size[screenSize]}, _ => [])
+    projectsRequest("fields.isFeatured:true", 8, 0).then( data => {
+      const partitioned = Array.from({length: size[screenSize]}, _ => {_; return []})
       let tick = 0
       data.forEach((project) => {
         if (tick > size[screenSize] - 1) tick = 0

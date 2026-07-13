@@ -1,7 +1,17 @@
-import { aboutFounder } from "../../assets/simulateCMS" // Replace with CMS
-import { useRef, useState, useEffect } from "react"
+// import { aboutFounder } from "../../assets/simulateCMS" // Replace with CMS
+import { useContext, useRef, useState, useEffect } from "react"
+import AboutContext from "../../context/AboutContext.jsx"
 
 function Founder() {
+  const { getFields } = useContext(AboutContext)
+  const [ content, setContent ] = useState({
+    aboutFounderHeading: "",
+    aboutFounderFromOurFounder: [],
+    aboutFounderName: "",
+    aboutFounderPortrait: "",
+    aboutFounderPortaitFront: ""
+  })
+
   const portraitRef = useRef(null)
   const portraitFrontRef = useRef(null)
   const [portraitObj, setPortraitObj] = useState({ x: 0, y: 0, w: 0, h: 0 })
@@ -17,6 +27,10 @@ function Founder() {
   const portraitRotation = 12
 
   useEffect(() => {
+    getFields('aboutFounderHeading', 'aboutFounderFromOurFounder', 'aboutFounderName',
+      'aboutFounderPortrait', 'aboutFounderPortraitFront')
+    .then( data => { setContent(data) } )
+
     if (portraitRef.current) portraitRef.current.addEventListener("mousemove", setObj)
 
     return () => {
@@ -24,6 +38,13 @@ function Founder() {
     }
   }, [portraitObj])
 
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return (
     <section className="bg-[url('/Pattern-export.svg')]">
       <div className="max-w-[1600px] px-4 md:px-10 mx-auto py-14">
@@ -33,15 +54,15 @@ function Founder() {
               BRIMEDGE
             </span>
             <h3 className="relative text-5xl md:text-6xl text-brim-blue mb-11 mt-6 font-oswald font-bold">
-              <span className="absolute">{aboutFounder.heading}</span>
+              <span className="absolute">{content.aboutFounderHeading}</span>
               <span
                 className="[-webkit-text-stroke:2px_#fff]"
                 style={{ textShadow: "-2.5px 2px 0 lightgray" }}
               >
-                {aboutFounder.heading}
+                {content.aboutFounderHeading}
               </span>
             </h3>
-            {aboutFounder.fromOurFounder.map((para) => {
+            {content.aboutFounderFromOurFounder.map((para) => {
               return (
                 <p
                   key={crypto.randomUUID()}
@@ -51,7 +72,7 @@ function Founder() {
                 </p>
               );
             })}
-            <p className="font-bold italic mt-[-4px]">{aboutFounder.name}</p>
+            <p className="font-bold italic mt-[-4px]">{content.aboutFounderName}</p>
             <p className="italic">Founder, Brimedge Nig Ltd</p>
           </div>
           <div className="xl:justify-self-end justify-self-center">
@@ -63,7 +84,7 @@ function Founder() {
               <img
                 loading="lazy"
                 ref={portraitRef}
-                src={aboutFounder.portrait}
+                src={content.aboutFounderPortrait}
                 alt="Portrait of our founder"
                 className="relative shadow-[0_4px_50px_rgba(0,0,0,0.1)] aspect-[600/750] object-cover hover:shadow-[0_14px_30px_rgba(0,0,0,0.3)]"
                 style={{
@@ -110,7 +131,7 @@ function Founder() {
                 ref={portraitFrontRef}
                 className="absolute inset-0 bg-cover bg-center warp-effect"
                 style={{
-                  backgroundImage: `url('${aboutFounder.portaitFront}')`,
+                  backgroundImage: `url('${content.aboutFounderPortraitFront}')`,
                   transform: `rotateY(${
                     portraitObj.x / (portraitObj.w / portraitRotation) -
                     portraitRotation / 2

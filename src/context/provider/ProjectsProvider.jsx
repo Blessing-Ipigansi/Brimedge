@@ -10,14 +10,15 @@ function ProjectsProvider({ children }) {
   })
   const [requestAndContent, setRequestAndContent] = useState({})
 
-  const projectsRequest = async (filter, limit, skip=0) => {
+  const projectsRequest = async (filter, limit, skip=0, order) => {
     try {
-      const queryKey = `${filter}|${limit}|${skip}`
+      const queryKey = `${filter}|${limit}|${skip}|${order}`
       if (!requestAndContent[queryKey] || (requestAndContent[queryKey] && requestAndContent[queryKey].isError)) {
         const query = {
           "content_type": "projects",
           limit,
-          skip
+          skip,
+          order
         }
         if (filter) query[filter.split(":", 2)[0]] = filter.split(":", 2)[1]
         const ContentfulObject = await client.getEntries(query)

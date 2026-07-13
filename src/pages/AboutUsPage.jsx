@@ -6,11 +6,32 @@ import Founder from "../components/about-us-page/Founder"
 import OurValues from "../components/about-us-page/OurValues"
 import WhatWeDo from "../components/about-us-page/WhatWeDo"
 import CallToAction from "../components/home-page/CallToAction"
-import { Helmet } from "react-helmet-async"
-import { metaData } from "../assets/simulateCMS" // Replace with CMS
+// import { metaData } from '../assets/simulateCMS.js' // Replace with CMS
+import { useContext, useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
+import GlobalContext from "../context/GlobalContext.jsx"
 
 
 function AboutUsPage() {
+  const { getFields } = useContext(GlobalContext)
+  const [ content, setContent ] = useState({
+    metaData: {
+      about: {
+        title: "",
+        description: "",
+        ogTitle: "",
+        ogDescription: "",
+        ogImage: ""
+      }
+    }
+  })
+  const { metaData } = content
+
+  useEffect(() => {
+    getFields('metaData')
+    .then( data => { setContent(data) } )
+  }, [])
+  
   // SEO metadata
   const rawBaseUrl = window.location.origin
   const baseUrl = rawBaseUrl.replace(/\/+$/, "")
@@ -24,6 +45,13 @@ function AboutUsPage() {
     ]
   }
 
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return<>
   {/* SEO metadata */}
   <Helmet>

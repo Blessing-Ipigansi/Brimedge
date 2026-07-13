@@ -11,11 +11,10 @@ import { HelmetProvider } from 'react-helmet-async'
 import HomeProvider from './context/provider/HomeProvider.jsx'
 import ProjectsProvider from "./context/provider/ProjectsProvider.jsx"
 import GlobalProvider from "./context/provider/GlobalProvider.jsx"
+import AboutProvider from "./context/provider/AboutProvider.jsx"
+import ContactProvider from "./context/provider/ContactProvider.jsx"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-// Delete
-import ReactStateTutorialPage from './pages/ReactStateTutorialPage.jsx'
-import ReactContentfulTutorial from './pages/ReactContentfulTutorial.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -27,9 +26,6 @@ const router = createBrowserRouter(
       <Route path='/projects/:projectId' element={<ProjectPage />} />
     </Route>
     <Route path='*' element={<NotFoundPage />} />
-    {/* Delete */}
-    <Route path='/react-state-tutorial' element={<ReactStateTutorialPage />} />
-    <Route path='/contentful-tutorial' element={<ReactContentfulTutorial />} />
     </>
   )
 );
@@ -39,9 +35,13 @@ function App() {
   <GlobalProvider>
   <ProjectsProvider>
   <HomeProvider>
+  <AboutProvider>
+  <ContactProvider>
     <HelmetProvider>
       <RouterProvider router={router} />
     </HelmetProvider>
+  </ContactProvider>
+  </AboutProvider>
   </HomeProvider>
   </ProjectsProvider>
   </GlobalProvider>

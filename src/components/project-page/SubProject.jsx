@@ -1,7 +1,9 @@
-import { HashLink } from 'react-router-hash-link'
+import { useNavigate } from 'react-router-dom'
 
 function SubProject({ link, img, tag, title, description }) {
-  return <HashLink smooth to={link} className='group'>
+  const navigate = useNavigate()
+
+  return <div className='group cursor-pointer' onClick={() => { navigate(link) }}>
     <div className="w-[100%] h-[1px] lg:bg-gradient-to-r lg:from-gray-200 lg:via-slate-300 lg:to-slate-200 relative">
       <div className='absolute lg:hidden inset-0 mx-[-32px] bg-gradient-to-r from-gray-200 via-slate-300 to-slate-200'></div>
     </div>
@@ -17,7 +19,7 @@ function SubProject({ link, img, tag, title, description }) {
         }
       </div>
     </div>
-  </HashLink>
+  </div>
 }
 
 export default SubProject

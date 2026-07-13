@@ -23,7 +23,7 @@ function CardsHolder({ screenSize }) {
 
   const size = { 'sm': 1, 'md': 2, 'lg': 3 }
   const partitionProjects = () => {
-    const partitioned = Array.from({length: size[screenSize]}, _ => [])
+    const partitioned = Array.from({length: size[screenSize]}, _ => {_; return[]})
     let tick = 0
     projects.forEach((project) => {
       if (tick > size[screenSize] - 1) tick = 0

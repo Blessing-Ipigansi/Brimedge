@@ -1,12 +1,21 @@
-import { aboutTeamSlideshow } from "../../assets/simulateCMS" // Replace with CMS
+// import { aboutTeamSlideshow } from "../../assets/simulateCMS" // Replace with CMS
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
+import AboutContext from "../../context/AboutContext.jsx"
 
 function MediaFrame() {
-  const size = aboutTeamSlideshow.length;
+  const { getFields } = useContext(AboutContext)
+  const [ content, setContent ] = useState({
+    aboutTeamSlideshow: ["", ""]
+  })
+
+  const size = content.aboutTeamSlideshow.length;
   const [next, setNext] = useState(0)
 
   useEffect(() => {
+    getFields('aboutTeamSlideshow')
+    .then( data => { setContent(data) } )
+
     const nextTimer = setTimeout(() => {
       setNext((prev) => {
         if (prev < size-1) return prev + 1
@@ -19,6 +28,13 @@ function MediaFrame() {
     }
   }, [next])
 
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return <section className="bg-gray-50 relative mb-4">
     <div className='z-10 absolute top-[-5px] w-full h-[10px] shadow-[0_0_15px_rgba(255,_255,_255,_0.4)] backdrop-blur-sm'></div>
     <div className="max-w-[1600px] mx-auto">
@@ -28,7 +44,7 @@ function MediaFrame() {
       >
         <AnimatePresence mode='popLayout'>
           {(next%2 === 0) &&
-            <motion.img loading='lazy' key={1} src={aboutTeamSlideshow[next]} className="w-full aspect-[900/506] object-cover" 
+            <motion.img loading='lazy' key={1} src={content.aboutTeamSlideshow[next]} className="w-full aspect-[900/506] object-cover" 
               initial={{ rotateY: -90 }}
               animate={{ rotateY: 0 }}
               exit={{ rotateY: 0.1, transition: {duration: 1.1} }}
@@ -36,7 +52,7 @@ function MediaFrame() {
             />
           }
           {(next%2 === 1) &&
-            <motion.img loading='lazy' key={2} src={aboutTeamSlideshow[next]} className="w-full aspect-[900/506] object-cover" 
+            <motion.img loading='lazy' key={2} src={content.aboutTeamSlideshow[next]} className="w-full aspect-[900/506] object-cover" 
               initial={{ rotateY: 90 }}
               animate={{ rotateY: 0 }}
               exit={{ rotateY: 0.1 , transition: {duration: 1.1}}}

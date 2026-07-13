@@ -1,10 +1,35 @@
 import ContactInformation from "../components/contact-page/ContactInformation"
 import MessageUs from "../components/contact-page/MessageUs"
-import { Helmet } from "react-helmet-async"
-import { contact, metaData } from "../assets/simulateCMS" // Replace with CMS
+import { useContext, useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
+// import { contact, metaData } from '../assets/simulateCMS.js' // Replace with CMS
+import GlobalContext from "../context/GlobalContext.jsx"
 
 
 function ContactPage() {
+  const { getFields } = useContext(GlobalContext)
+  const [ content, setContent ] = useState({
+    contact: {
+      phone: ["", ""],
+      email: ["", ""]
+    },
+    metaData: {
+      contact: {
+        title: "",
+        description: "",
+        ogTitle: "",
+        ogDescription: "",
+        ogImage: ""
+      }
+    }
+  })
+  const { contact, metaData } = content
+
+  useEffect(() => {
+    getFields('contact', 'metaData')
+    .then( data => { setContent(data) } )
+  }, [])
+
   // SEO metadata
   const rawBaseUrl = window.location.origin
   const baseUrl = rawBaseUrl.replace(/\/+$/, "")
@@ -46,6 +71,13 @@ function ContactPage() {
     }
   }
 
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return (
     <>
       {/* SEO metadata */}

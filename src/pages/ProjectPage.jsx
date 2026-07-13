@@ -1,21 +1,50 @@
 import { useParams } from 'react-router-dom'
-import { projects } from "../assets/simulateCMS" // Replace with CMS
+// import { projects } from "../assets/simulateCMS" // Replace with CMS
 import Gallery from '../components/project-page/Gallery'
 import ProjectDetails from '../components/project-page/ProjectDetails'
 import SubProject from '../components/project-page/SubProject'
 import CallToAction from "../components/home-page/CallToAction"
-import { selectRandom } from '../assets/helpFunctions'
+// import { selectRandom } from '../assets/helpFunctions'
 import Testimonial from '../components/project-page/Testimonial'
 import Share from '../components/project-page/Share'
-import { useState, useEffect, useRef } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from "react-router-dom";
+import ProjectsContext from '../context/ProjectsContext.jsx';
 
 function ProjectPage() {
   const { projectId } = useParams()
   const navigate = useNavigate()
-  const project = projects.find(p => projectId === p.id)
-  const sidePanelProjects = selectRandom(projects, 10)
+  const { projectsRequest } = useContext(ProjectsContext);
+  const [ project, setProject ] = useState({
+    id: '',
+    tag: '',
+    gallery: ['', ''],
+    title: '',
+    client: '',
+    location: '',
+    size: '',
+    awards: [],
+    description: "",
+    paragraphs: [],
+    shortDescription: '',
+    dateCompleted: '',
+    duration: '',
+    keyFeatures: ['', '', ''],
+    testimonial: {
+      rating: 1,
+      comment: '',
+      name: '',
+      role: ''
+    },
+    datePublished: "",
+    isFeatured: false,
+    private: false
+  })
+  const [ sidePanelProjects, setSidePanelProjects ] = useState([])
+
+  // const project = projects.find(p => projectId === p.id)
+  // const sidePanelProjects = selectRandom(projects, 10)
 
   const [hidePopup, setHidePopup] = useState(false)
   const sharePopupRef = useRef(null)
@@ -27,13 +56,32 @@ function ProjectPage() {
   }, {root: null})
 
   useEffect(() => {
-    if (!project) navigate(`/non-exisitent-or-removed-project/${projectId}`)
+    projectsRequest(`sys.id:${projectId}`, 1, 0)
+    .then(data => {
+      if (data[0]) setProject(data[0])
+      else if (Array.isArray(data) && data.length === 0) setProject(undefined)
+      else setProject(data)
+    })
+    projectsRequest("", 10, 0, "-sys.createdAt")
+    .then(data => { setSidePanelProjects(data) })
+
     if (sharePopupRef.current) Observer.observe(sharePopupRef.current)
     return () => {
       if (sharePopupRef.current) Observer.unobserve(sharePopupRef.current)
     }
-  }, [hidePopup])
+  }, [hidePopup, projectId])
 
+  if (!project) {
+    navigate(`/non-exisitent-or-removed-project/${projectId}`, {replace: true})
+  } // Check if the project exists before attempting to use
+  if (project.isError || sidePanelProjects.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
+  
   // SEO metadata
   const rawBaseUrl = window.location.origin
   const baseUrl = rawBaseUrl.replace(/\/+$/, "")
@@ -57,7 +105,7 @@ function ProjectPage() {
     "datePublished": project.datePublished
   }: undefined
 
-  if (project) return <>
+  return <>
   {/* SEO metadata */}
   <Helmet>
     <title>{project.title} | Projects | Brimedge</title>
@@ -91,7 +139,7 @@ function ProjectPage() {
             description={project.description}
             client={project.client}
             size={project.size}
-            completionDate={project.monthYearCompleted}
+            completionDate={project.dateCompleted}
             keyFeatures={project.keyFeatures}
             awards={project.awards}
           />

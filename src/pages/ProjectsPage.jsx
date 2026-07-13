@@ -1,10 +1,25 @@
 import CallToAction2 from "../components/global/CallToAction2"
 import CardsHolder from "../components/projects-page/CardsHolder"
-import { Helmet } from "react-helmet-async"
-import { metaData } from "../assets/simulateCMS" // Replace with CMS
-import { useState, useEffect } from "react"
+import { useContext, useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
+// import { metaData } from '../assets/simulateCMS.js' // Replace with CMS
+import GlobalContext from "../context/GlobalContext.jsx"
 
 function ProjectsPage() {
+  const { getFields } = useContext(GlobalContext)
+  const [ content, setContent ] = useState({
+    metaData: {
+      projects: {
+        title: "",
+        description: "",
+        ogTitle: "",
+        ogDescription: "",
+        ogImage: ""
+      }
+    }
+  })
+  const { metaData } = content
+
   const screenSize = () => {
     let w = window.innerWidth // 768 1024
 
@@ -27,8 +42,10 @@ function ProjectsPage() {
   }
 
   useEffect(() => {
-    window.addEventListener('resize', trackWindowSize)
+    getFields('metaData')
+    .then( data => { setContent(data) } )
 
+    window.addEventListener('resize', trackWindowSize)
     return () => {
       window.removeEventListener('resize', trackWindowSize)
     }
@@ -47,6 +64,13 @@ function ProjectsPage() {
     ]
   }
 
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return (
     <>
       <Helmet>

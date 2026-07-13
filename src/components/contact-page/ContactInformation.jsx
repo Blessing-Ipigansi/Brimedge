@@ -1,8 +1,52 @@
-import { contact } from "../../assets/simulateCMS" // Replace with CMS
-import { contactPage } from "../../assets/simulateCMS" // Replace with CMS
+// import { contact } from "../../assets/simulateCMS" // Replace with CMS
+// import { contactPage } from "../../assets/simulateCMS" // Replace with CMS
+import { useContext, useState, useEffect } from 'react'
+import ContactContext from "../../context/ContactContext.jsx"
+import GlobalContext from "../../context/GlobalContext.jsx"
 
 
 function ContactInformation() {
+  const { getFields: getPageFields } = useContext(ContactContext)
+  const [ pageData, setPageData ] = useState({
+    contactPageLocationLabel: "",
+    contactPagePhoneLabel: "",
+    contactPageMailLabel: "",
+    contactPageActiveHoursLabel: "",
+    contactPageSocialsLabel: ""
+  })
+  const { getFields: getContactFields } = useContext(GlobalContext)
+  const [ contactData, setContactData ] = useState({
+    contact: {
+      location: "",
+      phone: ["", ""],
+      email: ["", ""],
+      socialMediaHandles : {
+        facebook: "https://web.facebook.com/",
+        x: "https://x.com/",
+        instagram: "https://instagram.com/",
+        linkedIn: "https://www.linkedin.com/",
+        youtube: "https://www.youtube.com"
+      },
+      workingHours: ["", "", ""]
+    }
+  })
+
+  useEffect(() => {
+    getPageFields('contactPageLocationLabel', 'contactPagePhoneLabel', 'contactPageMailLabel',
+      'contactPageActiveHoursLabel', 'contactPageSocialsLabel'
+    )
+    .then( data => { setPageData(data) } )
+
+    getContactFields('contact',).then( data => { console.log(data); setContactData(data) } )
+  }, [])
+
+  if (pageData.isError || contactData.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return <section className="h-full border-x-[1px] border-gray-100 bg-gradient-to-br from-white to-gray-50">
     {/* shadow-[0px_8px_15px_0px_rgba(0,0,0,0.1)] */}
     <div>
@@ -27,8 +71,8 @@ function ContactInformation() {
             </svg>
           </div>
           <div className="leading-[25px]">
-            <p className="font-semibold text-[17px] text-gray-800 mb-1">{contactPage.locationLabel}</p>
-            <p className="text-[15px] text-gray-600">{contact.location}</p>
+            <p className="font-semibold text-[17px] text-gray-800 mb-1">{pageData.contactPageLocationLabel}</p>
+            <p className="text-[15px] text-gray-600">{contactData.contact.location}</p>
           </div>
         </div>
         <div className="flex p-4 gap-6 hover:bg-gradient-to-br from-accent-blue/10 to-accent-blue/20 rounded-[16px] hover:scale-105 transition-all duration-300">
@@ -60,8 +104,8 @@ function ContactInformation() {
             </svg>
           </div>
           <div className="leading-[25px]">
-            <p className="font-semibold text-[17px] text-gray-800 mb-1">{contactPage.phoneLabel}</p>
-            {contact.phone.map(number => 
+            <p className="font-semibold text-[17px] text-gray-800 mb-1">{pageData.contactPagePhoneLabel}</p>
+            {contactData.contact.phone.map(number => 
               <p key={crypto.randomUUID()} className="text-[15px] text-gray-600">{number}</p>
             )}
           </div>
@@ -85,8 +129,8 @@ function ContactInformation() {
             </svg>
           </div>
           <div className="leading-[25px]">
-            <p className="font-semibold text-[17px] text-gray-800 mb-1">{contactPage.mailLabel}</p>
-            {contact.email.map(mail => 
+            <p className="font-semibold text-[17px] text-gray-800 mb-1">{pageData.contactPageMailLabel}</p>
+            {contactData.contact.email.map(mail => 
               <p key={crypto.randomUUID()} className="text-[15px] text-gray-600">{mail}</p>
             )}
           </div>
@@ -110,8 +154,8 @@ function ContactInformation() {
               </svg>
           </div>
           <div className="leading-[25px]">
-            <p className="font-semibold text-[17px] text-gray-800 mb-1">{contactPage.activeHoursLabel}</p>
-            {contact.workingHours.map(period => 
+            <p className="font-semibold text-[17px] text-gray-800 mb-1">{pageData.contactPageActiveHoursLabel}</p>
+            {contactData.contact.workingHours.map(period => 
               <p key={crypto.randomUUID()} className="text-[15px] text-gray-600">{period}</p>
             )}
           </div>
@@ -119,9 +163,9 @@ function ContactInformation() {
       </div>
       {/* Follow us on socials */}
       <div className="pt-7 pb-7 mb-8 rounded-[16px] border-[1px] border-brim-blue/10 bg-gradient-to-r from-brim-blue/5 to-edge-green/5 mx-8 text-center">
-        <p className="mb-5 font-semibold text-gray-800 text-[17px]">{contactPage.socialsLabel}</p>
+        <p className="mb-5 font-semibold text-gray-800 text-[17px]">{pageData.contactPageSocialsLabel}</p>
         <div className="flex items-center justify-center gap-3 px-4">
-          <a href={contact.socialMediaHandles.facebook} target="_blank" rel="noopener noreferrer">
+          <a href={contactData.contact.socialMediaHandles.facebook} target="_blank" rel="noopener noreferrer">
           <div className="p-[10px] shadow-[0_3px_6px_0_rgba(0,0,0,0.1)] bg-white rounded-[14px] group hover:bg-brim-blue hover:scale-105 transition-all duration-300">
             <svg
               className="text-brim-blue/80 group-hover:text-white"
@@ -139,7 +183,7 @@ function ContactInformation() {
             </svg>
           </div>
           </a>
-          <a href={contact.socialMediaHandles.x} target="_blank" rel="noopener noreferrer">
+          <a href={contactData.contact.socialMediaHandles.x} target="_blank" rel="noopener noreferrer">
           <div className="p-[10px] shadow-[0_3px_6px_0_rgba(0,0,0,0.1)] bg-white rounded-[14px] group hover:bg-brim-blue hover:scale-105 transition-all duration-300">
             <svg
               className="text-brim-blue/80 group-hover:text-white"
@@ -157,7 +201,7 @@ function ContactInformation() {
             </svg>
           </div>
           </a>
-          <a href={contact.socialMediaHandles.instagram} target="_blank" rel="noopener noreferrer">
+          <a href={contactData.contact.socialMediaHandles.instagram} target="_blank" rel="noopener noreferrer">
           <div className="p-[10px] shadow-[0_3px_6px_0_rgba(0,0,0,0.1)] bg-white rounded-[14px] group hover:bg-brim-blue hover:scale-105 transition-all duration-300">
             <svg
               className="text-brim-blue/80 group-hover:text-white"
@@ -177,7 +221,7 @@ function ContactInformation() {
             </svg>
           </div>
           </a>
-          <a href={contact.socialMediaHandles.linkedIn} target="_blank" rel="noopener noreferrer">
+          <a href={contactData.contact.socialMediaHandles.linkedIn} target="_blank" rel="noopener noreferrer">
           <div className="p-[10px] shadow-[0_3px_6px_0_rgba(0,0,0,0.1)] bg-white rounded-[14px] group hover:bg-brim-blue hover:scale-105 transition-all duration-300">
             <svg
               className="text-brim-blue/80 group-hover:text-white"

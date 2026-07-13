@@ -25,14 +25,6 @@ export const contact = {
     'Sunday: Closed'
   ]
 }
-export const brimedgeStats = {
-  yearsOfExperience: 10,
-  projectsCompleted: 200,
-  teamMembers: 30,
-  happyClients: 500,
-  clientSatisfactionRate: 100,
-  avgClientRating: 5
-}// Warning! Do not create this content type
 export const projects = [
   {
     id: '1a2b3c',
@@ -298,6 +290,7 @@ export const aboutHero = {
     webm: '',
     other: ''
   },
+  avgClientRating: 5,
   tag2: 'Recognized Nationally',
   mainText: "We are a full-service construction and interior solutions company, we create spaces."
 }
@@ -340,7 +333,7 @@ export const aboutFounder = {
   ],
   name: "Emmanuel Ohioghame",
   portrait: "/founderPortrait.enc",
-  portaitFront: "/CEObrimedge.png",
+  portraitFront: "/CEObrimedge.png",
 };
 export const aboutOurValues = {
   topPhrase: "OUR CORE FOUNDATIONS",
@@ -420,7 +413,6 @@ export const contactPage = {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export default { 
   services, // Warning! Do not create this content type
-  brimedgeStats, // Warning! Do not create this content type
   
   projects,
   contact, // Warning! Do not create this content type

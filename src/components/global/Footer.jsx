@@ -1,12 +1,42 @@
 import { HashLink } from "react-router-hash-link"
 import { Link } from "react-router-dom"
-import { contact } from '../../assets/simulateCMS.js' // Replace with redux
-import { footer } from '../../assets/simulateCMS.js' // Replace with redux
+// import { contact } from '../../assets/simulateCMS.js' // Replace with redux
+// import { footer } from '../../assets/simulateCMS.js' // Replace with redux
+import { useContext, useEffect, useState } from "react"
+import GlobalContext from "../../context/GlobalContext"
 
 
 function Footer() {
-  // Redux to be used here to populate the footer
+  const { getFields } = useContext(GlobalContext)
+  const [ content, setContent ] = useState({
+    contact: {
+      socialMediaHandles: {
+        facebook: "/",
+        x: "/",
+        instagram: "/",
+        linkedIn: "/",
+        youtube: "/"
+      }
+    },
+    footer: {
+      termsOfServiceLink: "/",
+      privacyPolicyLink: "/"
+    }
+  })
+  const {contact, footer} = content
 
+  useEffect(() => {
+    getFields('contact', 'footer')
+    .then( data => { setContent(data) } )
+  }, [])
+
+  if (content.isError) {
+    const errorMessage = "There was a problem fetching the content for the home page"
+    const errorName = "Failed to Fetch"
+    const fetchError = new Error(errorMessage)
+    fetchError.name = errorName
+    throw fetchError
+  } // Throw error if data fetching from contentful is unsuccessful
   return <footer className='relative overflow-hidden shadow-'>
 
     <div className='absolute inset-0 bg-dark-blue'></div>
